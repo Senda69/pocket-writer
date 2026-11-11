@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'" />
+  <title>MumbleWrite</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 11v2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+      </span>
+      <input id="title" class="title-input" placeholder="Untitled song" spellcheck="false" />
+    </div>
+    <div class="top-actions">
+      <button id="btn-new" class="ghost" title="New song">New</button>
+      <button id="btn-open" class="ghost" title="Open a .mumble file">Open</button>
+      <button id="btn-save" class="ghost" title="Save as .mumble">Save</button>
+      <button id="btn-settings" class="ghost icon" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Zm7.4-2.5.1-1-.1-1 2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6c-.6.3-1.2.6-1.7 1l-2.4-1-2 3.4L4.6 11l-.1 1 .1 1-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.6h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.6Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="workspace">
+      <div class="recorder card">
+        <div class="rec-row">
+          <button id="btn-record" class="record" aria-label="Record">
+            <span class="dot"></span><span class="label">Record</span>
+          </button>
+          <div class="rec-info">
+            <div id="rec-time" class="rec-time">0:00</div>
+            <div id="rec-hint" class="rec-hint">Hit record and mumble, hum or "da-da" your melody. Leave a short pause between lines and a long one (2s+) between sections.</div>
+          </div>
+          <div class="beat">
+            <button id="btn-beat" class="ghost small" title="Play a beat in your headphones while you record">Load beat…</button>
+            <input id="beat-file" type="file" accept="audio/*" hidden />
+            <span id="beat-name" class="muted small"></span>
+          </div>
+        </div>
+        <canvas id="scope" class="scope" height="56"></canvas>
+      </div>
+
+      <div class="song-meta card">
+        <label>About <input id="topic" placeholder="what's the song about? e.g. leaving your hometown at 19" /></label>
+        <label>Mood <input id="mood" placeholder="bittersweet, hopeful" /></label>
+        <label>Style <input id="genre" placeholder="indie pop, R&amp;B, country…" /></label>
+        <button id="btn-write-all" class="primary">✨ Write whole song</button>
+      </div>
+
+      <div id="empty" class="empty">
+        <div class="empty-art" aria-hidden="true">
+          <span></span><span class="s"></span><span></span><span class="s"></span><span></span><span></span><span class="s"></span>
+        </div>
+        <h2>Mumble first, words later</h2>
+        <p>Record a take and each phrase becomes a line with its own rhythm: how many syllables, which ones hit hard, and the vowel you sang. Then get words that fit it.</p>
+        <p class="muted">No mic handy? <button id="btn-add-manual" class="link">Type a rhythm instead</button></p>
+      </div>
+
+      <div id="sections"></div>
+    </section>
+
+    <aside class="side">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="rhymes" role="tab">Rhymes</button>
+        <button class="tab" data-tab="sheet" role="tab">Lyric sheet</button>
+      </div>
+
+      <div class="panel" id="panel-rhymes">
+        <form id="rhyme-form" class="rhyme-search">
+          <input id="rhyme-input" placeholder="Rhyme with… (word or phrase)" autocomplete="off" spellcheck="false" />
+          <button class="primary small">Find</button>
+        </form>
+        <div class="syl-filter" id="syl-filter">
+          <span class="muted small">Syllables:</span>
+          <button data-syl="" class="chip active">Any</button>
+          <button data-syl="1" class="chip">1</button>
+          <button data-syl="2" class="chip">2</button>
+          <button data-syl="3" class="chip">3</button>
+        </div>
+        <div id="rhyme-results" class="rhyme-results">
+          <p class="muted small">Type a word, or click the last word of any line. Click a result to put it into the line you were editing.</p>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-sheet">
+        <div class="sheet-actions">
+          <button id="btn-copy-sheet" class="ghost small">Copy</button>
+          <button id="btn-export-sheet" class="ghost small">Export .txt</button>
+        </div>
+        <pre id="sheet" class="sheet"></pre>
+      </div>
+    </aside>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog" class="dialog-body">
+      <h3>Settings</h3>
+      <p class="small">Lyric suggestions use Claude. Paste an Anthropic API key from <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>. It's stored encrypted on this computer. Rhymes and rhythm analysis work offline without a key.</p>
+      <label>API key <input id="api-key" type="password" placeholder="sk-ant-…" autocomplete="off" /></label>
+      <p id="key-status" class="small muted"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="ghost">Close</button>
+        <button id="btn-save-key" value="save" class="primary">Save key</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="manual">
+    <form method="dialog" class="dialog-body">
+      <h3>Type a rhythm</h3>
+      <p class="small">Write the rhythm as <b>da</b> and <b>DUM</b> (stressed), or just tap it out in words, e.g. <i>da DUM da da DUM da DUM</i>, or paste a line you like and we'll copy its rhythm.</p>
+      <input id="manual-input" placeholder="da DUM da da DUM da DUM" />
+      <label class="row-label">Section
+        <select id="manual-section"></select>
+      </label>
+      <div class="dialog-actions">
+        <button value="cancel" class="ghost">Cancel</button>
+        <button value="add" class="primary">Add line</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="../lib/analysis.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
