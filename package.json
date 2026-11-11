@@ -1,5 +1,5 @@
 {
-  "name": "mumblewrite",
+  "name": "pocket-writer",
   "version": "0.1.0",
   "description": "Mumble a melody, get lyrics that fit it. Songwriting assistant with rhythm analysis and a rhyme finder.",
   "main": "src/main/main.js",
@@ -21,11 +21,11 @@
     "electron": "^45.3.0",
     "electron-builder": "^26.18.0"
   },
-  "productName": "MumbleWrite",
+  "productName": "Pocket Writer",
   "private": true,
   "build": {
-    "appId": "com.mumblewrite.app",
-    "productName": "MumbleWrite",
+    "appId": "com.pocketwriter.app",
+    "productName": "Pocket Writer",
     "files": [
       "src/**/*",
       "package.json"
@@ -56,7 +56,7 @@
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "MumbleWrite listens to your mumbles and hums to work out the rhythm of each line."
+        "NSMicrophoneUsageDescription": "Pocket Writer listens to your mumbles and hums to work out the rhythm of each line."
       }
     },
     "win": {

@@ -7,7 +7,7 @@ const phon = require('../lib/phonetics');
 const claude = require('./claude');
 
 // Lets tests (or a second profile) use a separate data folder.
-if (process.env.MUMBLEWRITE_USER_DATA) app.setPath('userData', process.env.MUMBLEWRITE_USER_DATA);
+if (process.env.POCKETWRITER_USER_DATA) app.setPath('userData', process.env.POCKETWRITER_USER_DATA);
 
 const settingsFile = () => path.join(app.getPath('userData'), 'settings.json');
 
@@ -34,7 +34,7 @@ function createWindow() {
     height: 880,
     minWidth: 900,
     minHeight: 600,
-    title: 'MumbleWrite',
+    title: 'Pocket Writer',
     backgroundColor: '#14121a',
     ...(process.platform === 'darwin' ? { titleBarStyle: 'hiddenInset' } : {}),
     webPreferences: {
@@ -104,8 +104,8 @@ const win = () => BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindow
 handle('project:save', async (json, suggestedName) => {
   const { canceled, filePath } = await dialog.showSaveDialog(win(), {
     title: 'Save song',
-    defaultPath: (suggestedName || 'Untitled') + '.mumble',
-    filters: [{ name: 'MumbleWrite song', extensions: ['mumble'] }],
+    defaultPath: (suggestedName || 'Untitled') + '.pocketsong',
+    filters: [{ name: 'Pocket Writer song', extensions: ['pocketsong'] }],
   });
   if (canceled || !filePath) return null;
   fs.writeFileSync(filePath, json);
@@ -115,7 +115,7 @@ handle('project:save', async (json, suggestedName) => {
 handle('project:open', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog(win(), {
     title: 'Open song',
-    filters: [{ name: 'MumbleWrite song', extensions: ['mumble'] }],
+    filters: [{ name: 'Pocket Writer song', extensions: ['pocketsong'] }],
     properties: ['openFile'],
   });
   if (canceled || !filePaths[0]) return null;

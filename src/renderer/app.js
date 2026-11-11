@@ -52,13 +52,13 @@ function rhymeLetter(section, idx) {
 }
 
 // ---------- persistence ----------
-const LS_KEY = 'mumblewrite.autosave';
+const LS_KEY = 'pocketwriter.autosave';
 const autosave = debounce(() => {
   try {
     let json = JSON.stringify(song);
     if (json.length > 4_000_000) json = JSON.stringify({ ...song, takes: song.takes.map((t) => ({ ...t, dataB64: null })) });
     localStorage.setItem(LS_KEY, json);
-  } catch { /* storage full or blocked: the .mumble file is the real save */ }
+  } catch { /* storage full or blocked: the .pocketsong file is the real save */ }
 }, 600);
 
 function changed({ rerender = false } = {}) {

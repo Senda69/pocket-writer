@@ -1,12 +1,12 @@
-# MumbleWrite
+# Pocket Writer
 
-Mumble a melody, get lyrics that fit it. MumbleWrite is a desktop songwriting assistant for Mac and Windows.
+Mumble a melody, get lyrics that fit it. Pocket Writer is a desktop songwriting assistant for Mac and Windows.
 
 1. **Record.** Hit Record (or press Space) and mumble, hum or "da-da" your melody. You can play a beat in your headphones while you record. Leave a short pause between lines and a longer one (2 seconds or more) between sections.
 2. **See the rhythm.** Each phrase becomes a line showing every syllable you sang: which ones hit hard (tall gold blocks are stressed beats), how long each one is, its pitch (blocks sit higher or lower), and the vowel you sang (`ee`, `ah`, `oh`…). Sections whose melody repeats are labelled as the chorus.
 3. **Get words that fit.** Tell it what the song is about, then use **Suggest** on a line, **Write section**, or **Write whole song**. Claude writes lines that match each line's syllable count and stress pattern, rhyme according to the section's scheme (AABB, ABAB…), and favour the vowel sounds you mumbled. Each option is re-checked locally and labelled with how well it fits.
 4. **Rhyme as you write.** Type into any line and you see live syllable and stress fit (green dots land on the beat) plus whether it rhymes with its partner line. The Rhymes panel finds perfect rhymes, slant rhymes, same-vowel words and multi-syllable rhymes, ranked by how common the word is in everyday speech. Click a result to drop it into the line you're editing.
-5. **Keep it.** Save the song as a `.mumble` file (audio included), or copy or export the lyric sheet as text.
+5. **Keep it.** Save the song as a `.pocketsong` file (audio included), or copy or export the lyric sheet as text.
 
 No mic handy? Use **Type a rhythm** to enter a line as `da DUM da DUM`, or paste a line you like to borrow its rhythm.
 
@@ -40,7 +40,7 @@ The easiest route is the included GitHub Actions workflow (`.github/workflows/bu
 
 These builds are unsigned:
 
-- **Mac:** the first time, right-click the app and choose **Open**. If macOS says the app is damaged, run `xattr -cr /Applications/MumbleWrite.app`.
+- **Mac:** the first time, right-click the app and choose **Open**. If macOS says the app is damaged, run `xattr -cr "/Applications/Pocket Writer.app"`.
 - **Windows:** SmartScreen may warn you. Click **More info**, then **Run anyway**.
 
 To remove the warnings you need an Apple Developer ID and a Windows code-signing certificate; electron-builder picks them up from `CSC_LINK` / `CSC_KEY_PASSWORD` (plus `APPLE_ID` etc. for notarisation).
