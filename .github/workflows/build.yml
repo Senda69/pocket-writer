@@ -3,7 +3,11 @@ name: Build desktop apps
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     tags: ['v*']
+
+permissions:
+  contents: write # to publish installers on the Releases page
 
 jobs:
   build:
@@ -37,3 +41,18 @@ jobs:
             dist/*.zip
             dist/*.exe
           if-no-files-found: error
+      - name: Read version
+        id: version
+        shell: bash
+        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      # Puts the installers on the repo's Releases page for easy downloading.
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.v }}
+          name: Pocket Writer ${{ steps.version.outputs.v }}
+          body: |
+            **Windows:** download `Pocket Writer Setup ${{ steps.version.outputs.v }}.exe` and double-click it. If Windows shows "Windows protected your PC", click **More info**, then **Run anyway**.
+            **Mac:** download the `.dmg` (arm64 for Apple Silicon, x64 for Intel). The first time, right-click the app and choose **Open**.
+          files: |
+            dist/*.dmg
+            dist/*.exe
